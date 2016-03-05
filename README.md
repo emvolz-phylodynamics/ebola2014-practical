@@ -66,7 +66,7 @@ hist(Draw_sl)
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
-Here we see that there is very little diversity in the SL data, with many pairs differing by less than two characters, which is due to the short time frame over which the epidemic spread and over which samples were collected.
+Here we see that there is very little diversity in the SL data, with many pairs differing by less than two characters. This is due to the short time frame over which the epidemic spread and over which samples were collected.
 
 
 ## A quick phylogenetic analysis and estimation of evolutionary rates
@@ -212,7 +212,7 @@ plot( ladderize( sl_lsdtree ), cex = .7 )
 
 
 ## Nonparametric phylodynamic estimation 
-We will reconstruct the historical dynamics of Ne(t) using the nonparametric skyride technique. This implementation of the skyride model is due to [Simon Frost](http://www.infectiousdisease.cam.ac.uk/directory/sdf22@cam.ac.uk), and another example applied to Lassa virus [can be found here](https://github.com/sdwfrost/exploratory-phylodynamics). 
+We will reconstruct the historical dynamics of Ne(t) using the nonparametric skyride technique. This implementation of the skyride model is due to [Julia Palacios](http://juliapalacios.github.io/) (with some modifications), and another example applied to Lassa virus [can be found here](https://github.com/sdwfrost/exploratory-phylodynamics). 
 
 ```r
 source('skyride.R') # load skyride model

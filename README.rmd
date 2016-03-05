@@ -36,6 +36,7 @@ Let's load the multiple sequence alignment and inspect it:
 ebov_algn <- read.dna('ebov_panafr_082014.fasta', format = 'fasta' ) 
 ebov_algn
 ```
+
 It's always a good idea to visually check your alignment, which is most easily done using an external tool like *seaview*.
 Note that this alignment includes many sequences from previous EBOV epidemics in addition to the 2014 West African epidemic, and that many of the older sequences are not whole-genomes. Also note that the sequence labels include both the place and time of sampling, and we will need to extract that information. 
 
@@ -43,12 +44,14 @@ Let's compute genetic and evolutionary distances between sequences. This compute
 ```{r}
 Draw <- dist.dna( ebov_algn, model = 'raw' , as.matrix = T, pairwise.deletion=TRUE) * ncol(ebov_algn )
 ```
+
 Note the option `pairwise.deletion=TRUE`, which causes missing data to be handled on a pairwise basis as opposed to masking sites across the entire alignment. We can also take a subset of distances from the Sierra Leone samples:
 ```{r}
 Draw_sl <- Draw[grepl( 'SierraLeone_G',  rownames(Draw)), grepl( 'SierraLeone_G',  rownames(Draw)) ]
 diag(Draw_sl) <- NA # don't count zero distances on diagonal
 hist(Draw_sl)
 ```
+
 Here we see that there is very little diversity in the SL data, with many pairs differing by less than two characters, which is due to the short time frame over which the epidemic spread and over which samples were collected.
 
 
@@ -57,15 +60,18 @@ First, we will compute an evolutionary distance matrix for phylogenetic analysis
 ```{r}
 D <- dist.dna( ebov_algn, model = 'F84', pairwise.deletion=TRUE)
 ```
+
 Now computing a neighbor-joining tree is as simple as the following command: 
 ```{r}
 ebov_nj <- nj( D )
 ebov_nj
 ```
+
 Let's plot it: 
 ```{r}
 plot( ladderize(ebov_nj) , cex = .5) 
 ```
+
 Note that there is no sigfinicance to the location of the root of this tree, and branch lengths show distances in units of substitions per site. Note the large cluster involving sequences from Sierra Leone. 
 
 To fit a molecular clock, we must use information about the time of each sample. 
@@ -74,7 +80,8 @@ Let's load the date of sampling for sequence, which is found in the following ta
 sampleDates_table <- read.csv( 'ebov_sampleDates.csv' ) 
 sampleDates <- setNames( sampleDates_table$year, sampleDates_table[,1]) # we will also need this in vector format
 ```
-Note that most of the samples come from the most recent epidemic:
+N
+ote that most of the samples come from the most recent epidemic:
 ```{r}
 hist( sampleDates )
 ```
@@ -92,31 +99,36 @@ n <- nrow(ebov_algn ) # the sample size
 d2root <- dist.nodes( reroot_ebov_nj )[n+1,1:n] # the distance from the root to each tip 
 scatter.smooth ( sampleDates, d2root ) # a scatter plot with local regression line
 ```
+
 Finally,we do a linear regression:
 ```{r}
 summary( lm( d2root ~ sampleDates ) )
 ```
+
 Specifically, the molecular clock rate is the slope:
 ```{r}
 coef( lm( d2root ~ sampleDates ) )['sampleDates']
 ```
+
 This value is not very accurate, but it's in the right ball-park. Estimates based on the state-of-the-art [Bayesian methods](http://epidemic.bio.ed.ac.uk/ebolavirus_evolutionary_rates) place the rate at around `.00124` substitions per site per year.
 
 
 
 ## Estimating times of common ancestry 
-To estimate a tree with branch lengths in units of time (and TMRCAs), we will need to use algorithms not (yet) included in R. We'll use a fast and accurate heuristic method known as [least-squares-dating]()
+To estimate a tree with branch lengths in units of time (and TMRCAs), we will need to use algorithms not (yet) included in R. We'll use a fast and accurate heuristic method known as [least-squares-dating](http://www.atgc-montpellier.fr/LSD/)
 We run this from the command line as follows: 
 ```
 lsd -i [input tree file name] -d [sample date file name] -o [output file name] -c -r a -s [sequence length]
 ```
+
 The `-c` option ensures that the tree has only positive branch lengths, and `-r a` examines all branches in the tree as potential sites for the root. `-s` specifies the sequence length, which we have seen from the alignment. 
 I have precomputed the results; you can load the time-scaled tree like so:
 ```{r}
 lsdtree <- read.tree('ebov_lsdtree.nwk')
 plot( ladderize(lsdtree), cex = .6 ) 
 ```
-We shall also want a version of this tree with all samples from outside Sierra Leone excluded; this is because we will estimate dynamics in Sierra Leone, and the models will not fit data from outside of that epidemic. We create the SL subtree like so: 
+
+We also want a version of this tree with all samples from outside Sierra Leone excluded; this is because we will estimate dynamics in Sierra Leone, and the models will not fit data from outside of that epidemic. We create the SL subtree like so: 
 ```{r}
 non_sl_samples <- lsdtree$tip.label[ !grepl( 'SierraLeone_G',  lsdtree$tip.label) ] # samples from outside SL
 sl_lsdtree <- drop.tip ( lsdtree, non_sl_samples )  # the SL subtree
@@ -135,6 +147,7 @@ sk <- calculate.heterochronous.skyride( sl_lsdtree ) # just for the SL subtree
 ```{r}
 head(sk)
 ```
+
 This generates a table of times and Ne estimates. Let's plot the trajectory and credible intervals:
 ```{r}
 matplot( max(sl_sampleTimes ) - sk$time # show time axis relative to last sample
@@ -142,6 +155,7 @@ matplot( max(sl_sampleTimes ) - sk$time # show time axis relative to last sample
  , type = 'l' , log = 'y', col = 'black' , lty = c(1, 2, 2 )
  , xlab = 'Time', ylab = 'Ne(t)' )
 ```
+
 Note the logarithmic y-axis. We see evidence for early exponential growth following by possible decreasing growth rates.
 
 
@@ -178,8 +192,9 @@ show.demographic.process( ebov_model1
  , t1 = max(sl_sampleTimes)
 ) 
 ```
-Now, it is simple to fit the model by maximum likelihood:
-```{r}
+
+Now, it is simple to fit the model by maximum likelihood. *Note that this will take a few minutes.*
+```{r results="hide"}
 # first apply sample times to phylo:
 sl_lsdtree <- DatedTree( sl_lsdtree, sampleTimes = sl_sampleTimes, tol = Inf, minEdgeLength = 1e-3 ) 
 fit <- optim.colik(sl_lsdtree
@@ -194,11 +209,10 @@ fit <- optim.colik(sl_lsdtree
 Here are the parameter estimates:
 ```{r}
 fit
-fit$par
 ```
 And here is the estimate of `R0`:
 ```{r}
-fit$par['beta'] / GAMMA
+unname( fit$par['beta'] / GAMMA )
 ```
 
 Let's plot our ML model fit along with the cumulative number of samples in our data through time.
@@ -227,7 +241,7 @@ How does this estimate of `R0` compare to other published values based on the ea
 ## What next? 
 There are many variations on this analysis:
 
-* what are the effects of assuming the F84 model? What about between-site rate variation? Try different nucleotide substition models: `JC` or `TN93`, and compare `gamma=0` vs `gamma=1`
+* What are the effects of assuming the F84 model? What about between-site rate variation? Try different nucleotide substition models: `JC` or `TN93`, and compare `gamma=0` vs `gamma=1`
 * What are the effects of the starting conditions for the MLE? Can you find a higher likelihood solution with different starting conditions? 
 * What are the effects of the birth-death SI model assumptions? This model can be extended in many ways:
 	- SIR model: Also estimate the initial number susceptible; this model can capture declining transmission rates towards the end of the sample collection period

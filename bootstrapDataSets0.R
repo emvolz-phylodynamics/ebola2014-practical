@@ -87,7 +87,7 @@ for ( imsa in 1:length( bsseqs )){
 	print( paste(date(), ll ))
 	
 	if (!is.infinite(ll)){
-		write.dna( bsseqs[[imsa]], paste(sep='', ODIR, 'ebov_panafr_bs', imsa, '.fasta' ) )
+		write.dna( bsseqs[[imsa]], paste(sep='', ODIR, 'ebov_panafr_bs', imsa, '.interleaved' ) )
 		write.tree( sl_lsdtree, file = paste(sep='', ODIR, 'sl_lsdtree', imsa, '.nwk') )
 		write.tree( lsdtree, file = paste(sep='', ODIR, 'ebov_lsdtree', imsa, '.nwk') )
 	}

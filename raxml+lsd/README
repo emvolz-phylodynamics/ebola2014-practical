@@ -1,0 +1,34 @@
+supplementary files from Gire et al. 
+
+
+lsd -i [input tree file name] -d [sample date file name] -o [output file name] -c -r a -s [sequence length]
+
+###################################
+# R code to format lsd sample dates
+require(ape)
+tre <- read.tree( 'trees/zebov.raxml.tree')
+tl2pids <- sapply( tre$tip.label, function(tl){
+	strsplit(tl, '_')[[1]][3]
+})
+sampleDates_table <- read.csv( '../ebov_sampleDates.csv' ) 
+sampleDates <- setNames( sampleDates_table$year, sampleDates_table[,1]) # we will also need this in vector format
+
+
+tl2dates <- unlist(sapply( tre$tip.label, function(tl){
+	pid <- tl2pids[tl]
+	unname( sampleDates[ grepl( pid, names(sampleDates)) ] )
+}))
+
+subtre <- drop.tip( tre, setdiff( tre$tip.label, names(tl2dates) ) )
+write.tree( subtre, file = 'sub0.zebov.raxml.tree') 
+n <- length(subtre$tip.label)
+write.table( file = 'sub0.zebov.raxml.tree.dates',  tl2dates, row.names=TRUE, col.names=c( n) , quote=FALSE)
+###################################
+# this verison has bootstrap: 
+~/git/lsd-0.3beta/src/lsd -i sub0.zebov.raxml.tree -d sub0.zebov.raxml.tree.dates -o zebov.raxml.lsd -c -v 2 -s 18961 -r a -f 20
+-v 2 rly biased rates downwards
+
+~/git/lsd-0.3beta/src/lsd -i sub0.zebov.raxml.tree -d sub0.zebov.raxml.tree.dates -o zebov.raxml.lsd -c -s 18961 -r a -f 20 -v 1
+also bad, so remove -v
+
+~/git/lsd-0.3beta/src/lsd -i sub0.zebov.raxml.tree -d sub0.zebov.raxml.tree.dates -o zebov.raxml.lsd -c -s 18961 -r a -f 100

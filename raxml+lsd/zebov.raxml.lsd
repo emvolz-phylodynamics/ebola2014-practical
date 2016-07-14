@@ -1,0 +1,27 @@
+
+LEAST-SQUARE METHODS TO ESTIMATE RATES AND DATES - v0.3beta 
+
+
+Input files:
+  I                                 Input tree file : sub0.zebov.raxml.tree
+  D                                 Input date file : sub0.zebov.raxml.tree.dates
+Output file:
+  O                                    Output file  : zebov.raxml.lsd
+Parameters:
+  C                                With constraints : Yes
+  T                        Lower bound for the rate : 1.000e-10
+  V                                  With variances : No
+  R                               Estimate the root : Use fast method to search on all branches
+  W                         Given substitution rate : No
+  G                                 Given outgroups : No
+  N                               Multiple data set : No
+  F                    Compute confidence intervals : Yes, sampling 100 times
+
+  H to print Help 
+  Y to accept or type a letter to change an option (Q = Exit) 
+Tree 1 rate 7.937e-04 , tMRCA 1975.973 , objective function 3.977312e-01
+rate 7.937e-04 [7.310e-04 , 8.428e-04] , tMRCA 1975.973 [896.054 , 1975.973] , objective function 3.977312e-01
+
+
+*********************************************************
+Elapsed time: 0.41 seconds

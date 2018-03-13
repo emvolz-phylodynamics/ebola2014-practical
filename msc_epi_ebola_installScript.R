@@ -20,19 +20,9 @@ if(as.numeric(file.info(myPath)$mode)<500) warning(paste(myPath, "may not be 'wr
 return(invisible())
 
 
-# install packages
-#~ install.packages('devtools')
-install.packages('BH')
-install.packages('inline')
 install.packages('ape')
-install.packages('phytools')
-#~ install.packages('phangorn')
-install.packages('deSolve')
-install.packages('expm')
-install.packages('Rcpp')
-install.packages('RcppArmadillo')
-#~ require(devtools)
-#~ install_github( 'emvolz-phylodynamics/phydynR')
-install.packages( 'phydynR_0.1.zip', repos = NULL )
-install.packages('sp')
-install.packages("INLA", repos="http://www.math.ntnu.no/inla/R/stable")
+install.packages('devtools')
+require(devtools)
+install_github( 'mrc-ide/skygrowth')
+install_github( 'emvolz/treedater')
+

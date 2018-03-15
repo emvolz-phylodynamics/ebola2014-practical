@@ -3,7 +3,7 @@
 ## HACK TO INSTALL R PACKAGES ON WINDOWS SYSTEMS
 ## WITHOUT ADMIN RIGHTS
 ##
-## Thibaut Jombart, March 2013
+## Original version developed by Thibaut Jombart, March 2013
 ## tjombart@imperial.ac.uk
 ##
 ##
@@ -21,8 +21,17 @@ return(invisible())
 
 
 install.packages('ape')
-install.packages('devtools')
-require(devtools)
-install_github( 'mrc-ide/skygrowth')
-install_github( 'emvolz/treedater')
+install.packages('ggplot2')
+install.packages('limSolve')
+install.packages('foreach')
+install.packages('mgcv')
+install.packages('Rcpp')
+install.packages('RcppArmadillo')
+install.packages('skygrowth_0.1.zip', repos=NULL)
+install.packages('treedater_1.0.zip', repos=NULL)
+
+#~ install.packages('devtools')
+#~ require(devtools)
+#~ install_github( 'mrc-ide/skygrowth')
+#~ install_github( 'emvolz/treedater')
 

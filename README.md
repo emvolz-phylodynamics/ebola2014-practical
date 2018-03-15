@@ -14,7 +14,7 @@ By the way, here is an interesting TED talk by the chief scientist responsible f
 * [P Sabeti: How we'll fight the next deadly virus](https://www.ted.com/talks/pardis_sabeti_how_we_ll_fight_the_next_deadly_virus?language=en)
 
 ## Installation and setup
-For these analyses, we'll use the `ape`, `treedater', and `skygrowth` packages. If you need to install this on MS Windows, run the installation script like this:
+For these analyses, we'll use the `ape`, `treedater`, and `skygrowth` packages. If you need to install this on MS Windows, run the installation script like this:
 ```
 source('msc_epi_ebola_installScript.R')
 ```
@@ -174,7 +174,7 @@ plot( ladderize(reroot_ebov_nj) , show.tip.label=FALSE )
 ![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png)
 
 Lets do our own root-to-tip regression using the rerooted tree. This will also give us a rough estimate of the molecular clock rate.
-You should find an almost linear trend between when evolutionary divergence and time that the sample was taken. 
+You should find an almost linear trend between evolutionary divergence and the time that a sample was taken. 
 
 ```r
 # the sample size 

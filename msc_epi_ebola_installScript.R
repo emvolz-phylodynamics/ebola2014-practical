@@ -18,7 +18,6 @@ if(!file.exists(myPath)){
 cat(paste("\nR library set to:",myPath,"\n"))
 if(as.numeric(file.info(myPath)$mode)<500) {
 	warning(paste(myPath, "may not be 'writable'."))
-	return(invisible())
 }
 
 

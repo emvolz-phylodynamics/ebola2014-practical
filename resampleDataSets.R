@@ -17,7 +17,7 @@ aln2sampleTimes <- function( aln){
 }
  
 for (i in 1:NREPS){
-	aln <- d[ sample(1:SAMPLESIZE, size=SAMPLESIZE, replace=FALSE) , ]
+	aln <- d[ sample(1:nrow(d), size=SAMPLESIZE, replace=FALSE) , ]
 	sts <- aln2sampleTimes( aln )
 	write.csv( sts, file = paste0(ODIR, 'sts-', i, '.csv') )
 	write.dna( aln, file = paste0(ODIR, 'aln-', i, '.fas') )
